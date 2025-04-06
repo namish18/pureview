@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Harm Detection & Prevention</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #E6F2FF;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #E6F2FF;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
+
+        /* Hero slider styles */
+        .hero-slider {
+            position: relative;
+            overflow: hidden;
+            height: 500px;
+            margin-bottom: 50px;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide-content {
+            position: absolute;
+            bottom: 80px;
+            left: 50px;
+            max-width: 600px;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            background-color: rgba(0, 78, 152, 0.7);
+            border-radius: 5px;
+        }
+
+        .slide-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .slide-content p {
+            font-size: 1.2rem;
+        }
+
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+
+        .slider-nav button {
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            font-size: 2rem;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .slider-nav button:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+            transform: scale(1.1);
+        }
+
+        .slider-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator.active {
+            background-color: white;
+            transform: scale(1.2);
+        }
+
+        /* Statistics section styles */
+        .stats-section {
+            padding: 50px 0;
+        }
+
+        .stats-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: #004e98;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            flex: 1;
+            min-width: 250px;
+            background-color: white;
+            border: 2px solid #b8d8ff;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-box .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #004e98;
+            margin-bottom: 15px;
+        }
+
+        .stat-box .icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #004e98;
+        }
+
+        /* Feature sections styles */
+        .features-section {
+            padding: 50px 0;
+        }
+
+        .features-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .feature-box {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-box h3 {
+            color: #004e98;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-box .icon {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            color: #004e98;
+        }
+
+        .feature-box .btn {
+            display: inline-block;
+            background-color: #004e98;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-box .btn:hover {
+            background-color: #003b75;
+            transform: scale(1.05);
+        }
+
+        /* Bottom sections styles */
+        .bottom-sections {
+            padding: 50px 0;
+        }
+
+        .bottom-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .bottom-box {
+            background-color: white;
+            border-radius: 8px;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .bottom-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .bottom-content {
+            flex: 2;
+        }
+
+        .bottom-content h3 {
+            color: #004e98;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .bottom-image {
+            flex: 1;
+            text-align: right;
+        }
+
+        .bottom-image img {
+            max-width: 150px;
+            height: auto;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .stats-container,
+            .features-container {
+                flex-direction: column;
+            }
+            
+            .slide-content {
+                left: 20px;
+                right: 20px;
+                bottom: 60px;
+            }
+            
+            .slide-content h2 {
+                font-size: 1.8rem;
+            }
+            
+            .bottom-box {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .bottom-image {
+                margin-top: 20px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header and Logo Section -->
+    <header>
+        <div class="container">
+            <img src="logo.png" alt="Company Logo" class="logo">
+        </div>
+    </header>
+
+    <!-- Hero Slider Section -->
+    <section class="hero-slider">
+        <div class="slide active" style="background-image: url('slide1.jpg');">
+            <div class="slide-content">
+                <h2>Protecting Digital Lives</h2>
+                <p>Advanced technologies to detect and prevent online harm in real-time.</p>
+            </div>
+        </div>
+        <div class="slide" style="background-image: url('slide2.jpg');">
+            <div class="slide-content">
+                <h2>Combating Online Hate Speech</h2>
+                <p>Our AI systems identify harmful content before it causes damage.</p>
+            </div>
+        </div>
+        <div class="slide" style="background-image: url('slide3.jpg');">
+            <div class="slide-content">
+                <h2>Fighting Misinformation</h2>
+                <p>Innovative solutions to detect deepfakes and manipulated media.</p>
+            </div>
+        </div>
+        
+        <div class="slider-nav">
+            <button class="prev">&#10094;</button>
+            <button class="next">&#10095;</button>
+        </div>
+        
+        <div class="slider-indicators">
+            <span class="indicator active"></span>
+            <span class="indicator"></span>
+            <span class="indicator"></span>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="stats-section">
+        <div class="container">
+            <h2>How Big is the Problem?</h2>
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="icon">&#128202;</div>
+                    <div class="number">73%</div>
+                    <p>of internet users have experienced some form of online harassment</p>
+                </div>
+                <div class="stat-box">
+                    <div class="icon">&#128250;</div>
+                    <div class="number">87%</div>
+                    <p>increase in deepfake videos over the past year</p>
+                </div>
+                <div class="stat-box">
+                    <div class="icon">&#128172;</div>
+                    <div class="number">2.8M</div>
+                    <p>harmful comments are posted online every day</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Sections -->
+    <section class="features-section">
+        <div class="container">
+            <div class="features-container">
+                <div class="feature-box">
+                    <div class="icon">&#128064;</div>
+                    <h3>Real Time Hate Detection Engine</h3>
+                    <p>Our advanced AI monitors content across platforms to identify and flag harmful language in real-time.</p>
+                    <a href="/hatelevel.html" class="btn">Click Here</a>
+                </div>
+                <div class="feature-box">
+                    <div class="icon">&#127916;</div>
+                    <h3>Deepfake Detection System</h3>
+                    <p>Cutting-edge technology that analyzes videos and images to identify manipulated or synthetic media.</p>
+                    <a href="/deepfakedet.html" class="btn">Click Here</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom Sections -->
+    <section class="bottom-sections">
+        <div class="container">
+            <div class="bottom-container">
+                <div class="bottom-box">
+                    <div class="bottom-content">
+                        <h3>Ethical AI Framework for Content Creation</h3>
+                        <p>Our comprehensive framework ensures that AI-generated content adheres to ethical standards while minimizing potential harm.</p>
+                    </div>
+                    <a href="/ethicalai.html" class="btn">Click Here</a>
+                </div>
+                
+                <div class="bottom-box">
+                    <div class="bottom-content">
+                        <h3>Get our Browser Plugin</h3>
+                        <p>Install our easy-to-use browser extension to protect yourself and your family from harmful content while browsing the web.</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Simple slider functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const indicators = document.querySelectorAll('.indicator');
+            const prevBtn = document.querySelector('.prev');
+            const nextBtn = document.querySelector('.next');
+            let currentSlide = 0;
+            const slideCount = slides.length;
+            
+            function showSlide(index) {
+                // Remove active class from all slides and indicators
+                slides.forEach(slide => slide.classList.remove('active'));
+                indicators.forEach(indicator => indicator.classList.remove('active'));
+                
+                // Add active class to current slide and indicator
+                slides[index].classList.add('active');
+                indicators[index].classList.add('active');
+                currentSlide = index;
+            }
+            
+            // Next slide function
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slideCount;
+                showSlide(currentSlide);
+            }
+            
+            // Previous slide function
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+                showSlide(currentSlide);
+            }
+            
+            // Event listeners
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+            
+            // Indicator click events
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => showSlide(index));
+            });
+            
+            // Auto slide every 5 seconds
+            setInterval(nextSlide, 5000);
+        });
+    </script>
+</body>
+</html>

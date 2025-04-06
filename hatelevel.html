@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hate Detection Engine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #D2EAFA;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #004e98;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #004e98;
+        }
+
+        input[type="url"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #B8D8FF;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="url"]:focus {
+            border-color: #004e98;
+            outline: none;
+        }
+
+        .btn-submit {
+            background-color: #004e98;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: #003b75;
+        }
+
+        .results {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .hate-level {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .high {
+            color: #d9534f;
+        }
+
+        .medium {
+            color: #f0ad4e;
+        }
+
+        .low {
+            color: #5cb85c;
+        }
+
+        .message {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .breakdown {
+            margin-top: 20px;
+        }
+
+        .breakdown h3 {
+            margin-bottom: 10px;
+            color: #004e98;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .recommendations {
+            margin-top: 20px;
+        }
+
+        .recommendations h3 {
+            margin-bottom: 10px;
+            color: #004e98;
+        }
+
+        .recommendations ul {
+            padding-left: 20px;
+        }
+
+        .recommendations li {
+            margin-bottom: 8px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            border: 4px solid rgba(0, 78, 152, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #004e98;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hate Detection Engine</h1>
+        
+        <form id="urlForm">
+            <div class="input-group">
+                <label for="urlInput">Enter your URL</label>
+                <input type="url" id="urlInput" placeholder="https://example.com" required>
+            </div>
+            <button type="submit" class="btn-submit">Analyze Content</button>
+        </form>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing content for harmful elements...</p>
+        </div>
+        
+        <div class="results" id="results">
+            <div class="hate-level high" id="hateLevel">Hate Level: HIGH!</div>
+            
+            <div class="message">
+                <p>This content contains high levels of harmful language that can negatively impact mental health and well-being. Exposure to hate speech has been linked to increased stress, anxiety, and depression.</p>
+            </div>
+            
+            <div class="breakdown">
+                <h3>Content Analysis Breakdown</h3>
+                <div class="breakdown-item">
+                    <span>Harassment/Bullying</span>
+                    <span>Severe</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Discriminatory Language</span>
+                    <span>High</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Toxicity Level</span>
+                    <span>85%</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>Threatening Content</span>
+                    <span>Moderate</span>
+                </div>
+            </div>
+            
+            <div class="recommendations">
+                <h3>Recommendations</h3>
+                <ul>
+                    <li>Consider viewing alternative content that promotes positive mental health</li>
+                    <li>Report this content to the platform's moderation team</li>
+                    <li>Use our browser plugin to automatically filter similar harmful content</li>
+                    <li>If you're feeling distressed, consider reaching out to mental health resources</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlForm = document.getElementById('urlForm');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const hateLevel = document.getElementById('hateLevel');
+
+            urlForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Show loading spinner
+                loading.classList.add('show');
+                results.classList.remove('show');
+                
+                // Simulate API call with timeout
+                setTimeout(function() {
+                    loading.classList.remove('show');
+                    results.classList.add('show');
+                    
+                    // You would normally get this from your API
+                    // Simulating different hate levels (for demo)
+                    const url = document.getElementById('urlInput').value;
+                    let level;
+                    
+                    // Simple demo logic based on URL
+                    if (url.includes('example.com')) {
+                        level = 'LOW';
+                        hateLevel.textContent = 'Hate Level: LOW';
+                        hateLevel.className = 'hate-level low';
+                    } else if (url.includes('test.com')) {
+                        level = 'MEDIUM';
+                        hateLevel.textContent = 'Hate Level: MEDIUM';
+                        hateLevel.className = 'hate-level medium';
+                    } else {
+                        level = 'HIGH';
+                        hateLevel.textContent = 'Hate Level: HIGH!';
+                        hateLevel.className = 'hate-level high';
+                    }
+                    
+                }, 2000); // 2 second simulation
+            });
+        });
+    </script>
+</body>
+</html>

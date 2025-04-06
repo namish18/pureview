@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Detection Analyzer</title>
+    <style>
+        body {
+            background-color: #f0f8ff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .upload-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .upload-options {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .upload-card {
+            flex: 1;
+            border: 2px dashed #a0c4ff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .upload-card:hover {
+            transform: translateY(-5px);
+        }
+
+        #video-url {
+            width: 80%;
+            padding: 0.8rem;
+            border: 1px solid #a0c4ff;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+
+        .upload-btn {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .upload-btn:hover {
+            background: #357abd;
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #analyzed-video {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .authenticity-score {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1.5rem;
+        }
+
+        .score-value {
+            font-size: 2.5rem;
+            color: #00c853;
+            font-weight: bold;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            margin: 1rem 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <h2>Analyze Video Content</h2>
+            <div class="upload-options">
+                <!-- URL Input -->
+                <div class="upload-card">
+                    <h3>Analyze Online Video</h3>
+                    <input type="url" id="video-url" placeholder="Paste video URL here">
+                    <br>
+                    <button class="upload-btn" onclick="analyzeURL()">Analyze URL</button>
+                </div>
+
+                <!-- File Upload -->
+                <div class="upload-card">
+                    <h3>Upload Local File</h3>
+                    <input type="file" id="file-upload" hidden accept="video/*">
+                    <button class="upload-btn" onclick="document.getElementById('file-upload').click()">
+                        Choose File
+                    </button>
+                    <p id="file-name" style="margin-top: 0.5rem;"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" style="display: none;">
+            <div class="video-container">
+                <video id="analyzed-video" controls>
+                    <source src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="authenticity-score">
+                Authenticity Score:
+                <div class="score-value">98%</div>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div class="loading-overlay" id="loading">
+            <div class="loading-spinner"></div>
+            <h3>Analyzing Content...</h3>
+        </div>
+
+        <!-- Error Messages -->
+        <div class="error-message" id="error-message"></div>
+    </div>
+
+    <script>
+        // File Upload Handling
+        document.getElementById('file-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('file-name').textContent = file.name;
+                analyzeFile(file);
+            }
+        });
+
+        // URL Analysis Handler
+        function analyzeURL() {
+            const url = document.getElementById('video-url').value;
+            if (!url) {
+                showError('Please enter a valid video URL');
+                return;
+            }
+            startAnalysis();
+        }
+
+        // File Analysis Handler
+        function analyzeFile(file) {
+            if (!file.type.startsWith('video/')) {
+                showError('Please upload a valid video file');
+                return;
+            }
+            startAnalysis();
+        }
+
+        // Show loading state
+        function startAnalysis() {
+            document.getElementById('loading').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+                document.querySelector('.results-section').style.display = 'block';
+            }, 2000); // Simulated analysis delay
+        }
+
+        // Error handling
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            setTimeout(() => errorDiv.textContent = '', 3000);
+        }
+    </script>
+</body>
+</html>
